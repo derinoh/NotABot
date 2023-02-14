@@ -36,7 +36,7 @@ const weekdays: ApplicationCommandOptionChoiceData[] = [
 const timeslist: ApplicationCommandOptionChoiceData<string>[] = [];
 for (let i = 0; i < 24; i++) {
     for (let j = 0; j < 4; j++) {
-        timelist.push(
+        timeslist.push(
             {
                 name: `${i}:${j === 0 ? `00` : 15 * j}`,
                 value: `${i}:${j === 0 ? `00` : 15 * j}`
