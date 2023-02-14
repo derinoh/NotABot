@@ -1,0 +1,24 @@
+{
+  "name": "not-a-bot",
+  "private": true,
+  "main": "src/index.ts",
+  "author": "der",
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "build": "tsc",
+    "start": "node build/index.js",
+    "postinstall": "tsc",
+    "deploy-commands": "ts-node src/deploy-commands.ts"
+  },
+  "dependencies": {
+    "@discordjs/rest": "^1.5.0",
+    "discord.js": "14.7.1",
+    "dotenv": "^16.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.13.0",
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  }
+}
