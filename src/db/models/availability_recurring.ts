@@ -3,7 +3,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import type { Frequency, FrequencyId } from './frequency';
 import type { User, UserId } from './user';
 
-export interface RotatingAvailabilityAttributes {
+export interface AvailabilityRecurringAttributes {
   id?: number;
   user_id: number;
   freq_id: number;
@@ -13,12 +13,12 @@ export interface RotatingAvailabilityAttributes {
   created_on: Date;
 }
 
-export type RotatingAvailabilityPk = "id";
-export type RotatingAvailabilityId = RotatingAvailability[RotatingAvailabilityPk];
-export type RotatingAvailabilityOptionalAttributes = "id" | "created_on";
-export type RotatingAvailabilityCreationAttributes = Optional<RotatingAvailabilityAttributes, RotatingAvailabilityOptionalAttributes>;
+export type AvailabilityRecurringPk = "id";
+export type AvailabilityRecurringId = AvailabilityRecurring[AvailabilityRecurringPk];
+export type AvailabilityRecurringOptionalAttributes = "id" | "created_on";
+export type AvailabilityRecurringCreationAttributes = Optional<AvailabilityRecurringAttributes, AvailabilityRecurringOptionalAttributes>;
 
-export class RotatingAvailability extends Model<RotatingAvailabilityAttributes, RotatingAvailabilityCreationAttributes> implements RotatingAvailabilityAttributes {
+export class AvailabilityRecurring extends Model<AvailabilityRecurringAttributes, AvailabilityRecurringCreationAttributes> implements AvailabilityRecurringAttributes {
   id?: number;
   user_id!: number;
   freq_id!: number;
@@ -27,19 +27,19 @@ export class RotatingAvailability extends Model<RotatingAvailabilityAttributes, 
   end_time!: string;
   created_on!: Date;
 
-  // RotatingAvailability belongsTo Frequency via freq_id
+  // AvailabilityRecurring belongsTo Frequency via freq_id
   freq!: Frequency;
   getFreq!: Sequelize.BelongsToGetAssociationMixin<Frequency>;
   setFreq!: Sequelize.BelongsToSetAssociationMixin<Frequency, FrequencyId>;
   createFreq!: Sequelize.BelongsToCreateAssociationMixin<Frequency>;
-  // RotatingAvailability belongsTo User via user_id
+  // AvailabilityRecurring belongsTo User via user_id
   user!: User;
   getUser!: Sequelize.BelongsToGetAssociationMixin<User>;
   setUser!: Sequelize.BelongsToSetAssociationMixin<User, UserId>;
   createUser!: Sequelize.BelongsToCreateAssociationMixin<User>;
 
-  static initModel(sequelize: Sequelize.Sequelize): typeof RotatingAvailability {
-    return RotatingAvailability.init({
+  static initModel(sequelize: Sequelize.Sequelize): typeof AvailabilityRecurring {
+    return AvailabilityRecurring.init({
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -81,7 +81,7 @@ export class RotatingAvailability extends Model<RotatingAvailabilityAttributes, 
     }
   }, {
     sequelize,
-    tableName: 'rotating_availability',
+    tableName: 'availability_recurring',
     timestamps: false
   });
   }

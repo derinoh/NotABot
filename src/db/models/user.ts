@@ -1,7 +1,7 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
+import type { AvailabilityRecurring, AvailabilityRecurringId } from './availability_recurring';
 import type { AvailabilityWindow, AvailabilityWindowId } from './availability_window';
-import type { RotatingAvailability, RotatingAvailabilityId } from './rotating_availability';
 import type { UsersGame, UsersGameId } from './users_game';
 import type { UsersMatch, UsersMatchId } from './users_match';
 
@@ -23,6 +23,18 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   timezone!: string;
   created_on!: Date;
 
+  // User hasMany AvailabilityRecurring via user_id
+  availability_recurrings!: AvailabilityRecurring[];
+  getAvailability_recurrings!: Sequelize.HasManyGetAssociationsMixin<AvailabilityRecurring>;
+  setAvailability_recurrings!: Sequelize.HasManySetAssociationsMixin<AvailabilityRecurring, AvailabilityRecurringId>;
+  addAvailability_recurring!: Sequelize.HasManyAddAssociationMixin<AvailabilityRecurring, AvailabilityRecurringId>;
+  addAvailability_recurrings!: Sequelize.HasManyAddAssociationsMixin<AvailabilityRecurring, AvailabilityRecurringId>;
+  createAvailability_recurring!: Sequelize.HasManyCreateAssociationMixin<AvailabilityRecurring>;
+  removeAvailability_recurring!: Sequelize.HasManyRemoveAssociationMixin<AvailabilityRecurring, AvailabilityRecurringId>;
+  removeAvailability_recurrings!: Sequelize.HasManyRemoveAssociationsMixin<AvailabilityRecurring, AvailabilityRecurringId>;
+  hasAvailability_recurring!: Sequelize.HasManyHasAssociationMixin<AvailabilityRecurring, AvailabilityRecurringId>;
+  hasAvailability_recurrings!: Sequelize.HasManyHasAssociationsMixin<AvailabilityRecurring, AvailabilityRecurringId>;
+  countAvailability_recurrings!: Sequelize.HasManyCountAssociationsMixin;
   // User hasMany AvailabilityWindow via user_id
   availability_windows!: AvailabilityWindow[];
   getAvailability_windows!: Sequelize.HasManyGetAssociationsMixin<AvailabilityWindow>;
@@ -35,18 +47,6 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   hasAvailability_window!: Sequelize.HasManyHasAssociationMixin<AvailabilityWindow, AvailabilityWindowId>;
   hasAvailability_windows!: Sequelize.HasManyHasAssociationsMixin<AvailabilityWindow, AvailabilityWindowId>;
   countAvailability_windows!: Sequelize.HasManyCountAssociationsMixin;
-  // User hasMany RotatingAvailability via user_id
-  rotating_availabilities!: RotatingAvailability[];
-  getRotating_availabilities!: Sequelize.HasManyGetAssociationsMixin<RotatingAvailability>;
-  setRotating_availabilities!: Sequelize.HasManySetAssociationsMixin<RotatingAvailability, RotatingAvailabilityId>;
-  addRotating_availability!: Sequelize.HasManyAddAssociationMixin<RotatingAvailability, RotatingAvailabilityId>;
-  addRotating_availabilities!: Sequelize.HasManyAddAssociationsMixin<RotatingAvailability, RotatingAvailabilityId>;
-  createRotating_availability!: Sequelize.HasManyCreateAssociationMixin<RotatingAvailability>;
-  removeRotating_availability!: Sequelize.HasManyRemoveAssociationMixin<RotatingAvailability, RotatingAvailabilityId>;
-  removeRotating_availabilities!: Sequelize.HasManyRemoveAssociationsMixin<RotatingAvailability, RotatingAvailabilityId>;
-  hasRotating_availability!: Sequelize.HasManyHasAssociationMixin<RotatingAvailability, RotatingAvailabilityId>;
-  hasRotating_availabilities!: Sequelize.HasManyHasAssociationsMixin<RotatingAvailability, RotatingAvailabilityId>;
-  countRotating_availabilities!: Sequelize.HasManyCountAssociationsMixin;
   // User hasMany UsersGame via user_id
   users_games!: UsersGame[];
   getUsers_games!: Sequelize.HasManyGetAssociationsMixin<UsersGame>;
