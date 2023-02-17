@@ -1,13 +1,66 @@
-import { SlashCommandBuilder } from "discord.js";
-import { CommandExecution } from "../interfaces/command";
+import { time } from "console";
+import {
+    CommandInteraction,
+    CommandInteractionOptionResolver,
+    ContextMenuCommandInteraction,
+    inlineCode,
+    SlashCommandBuilder,
+    User,
+} from "discord.js";
+import { report } from "process";
+import { AvailabilityRecurring } from "../db/models/availability_recurring";
+import { Command, CommandExecution } from "../interfaces/command";
 import { weekdays, datesOptions } from "../lib/constants";
+import { getErrorMessage } from "../lib/exceptions";
+import { timeRegex } from "../lib/validation";
+import db from "../db/connect";
+import { Op } from "sequelize";
+import { initModels } from "../db/models/init-models";
 
-export const execution: CommandExecution = async (_, interaction) => {
-    
+export const execution: CommandExecution = async (client, interaction) => {
+    const options = interaction.options;
+    // I couldn't figure out how to correctly type interactions so that i could
+    // access the getSubcommandGroup() and getSubCommand() methods
+    // so I'm accessing what I need in this hacky way for now
+    const group = options.data[0]?.name;
+    const subcommand = options.data[0]?.options
+        ? options.data[0]?.options[0].name
+        : null;
+    if (group == "set") {
+        if (subcommand == "recurring") {
+            try {
+                const { User, AvailabilityRecurring } = initModels(db);
+                const every = <number>options.get("every")?.value;
+                const weekday = <number>options.get("weekday")?.value;
+                const start_time = <string>options.get("start_time")?.value;
+                const end_time = <string>options.get("end_time")?.value;
+                const _user = await User.findOne({
+                    where: { discordId: { [Op.eq]: interaction.user.id } },
+                });
 
-    interaction.reply({
-        content: "Testing Availability command",
-    });
+                // TODO: Add the user to the database automatically and prompt them for their timezone
+                if (!_user || _user?.id === undefined) throw new Error('❌ You do not exist as a user in the system yet')
+
+                // We need to check that the time string is in the right format because it's the only 
+                // value that the user can actually type whatever they want in there 
+                if (timeRegex.test(start_time) && timeRegex.test(end_time)) {
+                    await AvailabilityRecurring.create({
+                        freq_id: every,
+                        weekday,
+                        start_time,
+                        end_time,
+                        user_id: _user.id,
+                    });
+                    
+                    interaction.reply({ content: `✅ Recurring schedule saved!`})
+
+                } else throw new Error("❌ Time is not in the correct format.");
+            } catch (err) {
+                console.error(err);
+                await interaction.reply({ content: getErrorMessage(err) });
+            }
+        }
+    }
 };
 
 export const data = new SlashCommandBuilder()
@@ -126,7 +179,9 @@ export const data = new SlashCommandBuilder()
     .addSubcommandGroup((group) =>
         group
             .setName("remove")
-            .setDescription("Remove a block of time to your availability schedule")
+            .setDescription(
+                "Remove a block of time to your availability schedule"
+            )
             .addSubcommand((subcommand) =>
                 subcommand
                     .setName("recurring")
@@ -134,9 +189,11 @@ export const data = new SlashCommandBuilder()
                     .addIntegerOption((option) =>
                         option
                             .setName("schedule_id")
-                            .setDescription("Select the recurring schedule to remove")
+                            .setDescription(
+                                "Select the recurring schedule to remove"
+                            )
                             .setRequired(true)
                             .setAutocomplete(true)
                     )
             )
-    )
+    );
