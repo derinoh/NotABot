@@ -18,10 +18,10 @@ export type UserOptionalAttributes = "id" | "created_on";
 export type UserCreationAttributes = Optional<UserAttributes, UserOptionalAttributes>;
 
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-  id?: number;
-  discordId!: string;
-  timezone!: string;
-  created_on!: Date;
+  declare id?: number;
+  declare discordId: string;
+  declare timezone: string;
+  declare created_on: Date;
 
   // User hasMany AvailabilityRecurring via user_id
   availability_recurrings!: AvailabilityRecurring[];

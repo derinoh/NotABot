@@ -17,11 +17,11 @@ export type MatchOptionalAttributes = "id" | "duration_hours" | "created_on";
 export type MatchCreationAttributes = Optional<MatchAttributes, MatchOptionalAttributes>;
 
 export class Match extends Model<MatchAttributes, MatchCreationAttributes> implements MatchAttributes {
-  id?: number;
-  game_id!: number;
-  match_datetime!: Date;
-  duration_hours?: number;
-  created_on!: Date;
+  declare id?: number;
+  declare game_id: number;
+  declare match_datetime: Date;
+  declare duration_hours?: number;
+  declare created_on: Date;
 
   // Match belongsTo Game via game_id
   game!: Game;

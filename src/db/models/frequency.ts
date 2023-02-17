@@ -13,8 +13,8 @@ export type FrequencyOptionalAttributes = "id" | "name";
 export type FrequencyCreationAttributes = Optional<FrequencyAttributes, FrequencyOptionalAttributes>;
 
 export class Frequency extends Model<FrequencyAttributes, FrequencyCreationAttributes> implements FrequencyAttributes {
-  id?: number;
-  name?: string;
+  declare id?: number;
+  declare name?: string;
 
   // Frequency hasMany AvailabilityRecurring via freq_id
   availability_recurrings!: AvailabilityRecurring[];

@@ -19,13 +19,13 @@ export type GameOptionalAttributes = "id" | "is_async" | "minPlayers" | "maxPlay
 export type GameCreationAttributes = Optional<GameAttributes, GameOptionalAttributes>;
 
 export class Game extends Model<GameAttributes, GameCreationAttributes> implements GameAttributes {
-  id?: number;
-  name!: string;
-  is_async!: number;
-  minPlayers!: number;
-  maxPlayers!: number;
-  link!: string;
-  created_on!: Date;
+ declare id?: number;
+  declare name: string;
+  declare is_async: number;
+  declare minPlayers: number;
+  declare maxPlayers: number;
+  declare link: string;
+  declare created_on: Date;
 
   // Game hasMany Match via game_id
   matches!: Match[];

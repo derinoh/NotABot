@@ -19,13 +19,13 @@ export type AvailabilityRecurringOptionalAttributes = "id" | "created_on";
 export type AvailabilityRecurringCreationAttributes = Optional<AvailabilityRecurringAttributes, AvailabilityRecurringOptionalAttributes>;
 
 export class AvailabilityRecurring extends Model<AvailabilityRecurringAttributes, AvailabilityRecurringCreationAttributes> implements AvailabilityRecurringAttributes {
-  id?: number;
-  user_id!: number;
-  freq_id!: number;
-  weekday!: number;
-  start_time!: string;
-  end_time!: string;
-  created_on!: Date;
+  declare id?: number;
+  declare user_id: number;
+  declare freq_id: number;
+  declare weekday: number;
+  declare start_time: string;
+  declare end_time: string;
+  declare created_on: Date;
 
   // AvailabilityRecurring belongsTo Frequency via freq_id
   freq!: Frequency;

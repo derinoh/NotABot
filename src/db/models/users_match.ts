@@ -15,9 +15,9 @@ export type UsersMatchOptionalAttributes = "id";
 export type UsersMatchCreationAttributes = Optional<UsersMatchAttributes, UsersMatchOptionalAttributes>;
 
 export class UsersMatch extends Model<UsersMatchAttributes, UsersMatchCreationAttributes> implements UsersMatchAttributes {
-  id?: number;
-  user_id!: number;
-  match_id!: number;
+  declare id?: number;
+  declare user_id: number;
+  declare match_id: number;
 
   // UsersMatch belongsTo Match via match_id
   match!: Match;

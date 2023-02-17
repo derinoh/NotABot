@@ -16,10 +16,10 @@ export type UsersGameOptionalAttributes = "id" | "created_on";
 export type UsersGameCreationAttributes = Optional<UsersGameAttributes, UsersGameOptionalAttributes>;
 
 export class UsersGame extends Model<UsersGameAttributes, UsersGameCreationAttributes> implements UsersGameAttributes {
-  id?: number;
-  user_id!: number;
-  game_id!: number;
-  created_on?: Date;
+  declare id?: number;
+  declare user_id: number;
+  declare game_id: number;
+  declare created_on?: Date;
 
   // UsersGame belongsTo Game via game_id
   game!: Game;
