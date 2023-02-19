@@ -9,7 +9,7 @@ export interface UserAttributes {
   id?: number;
   discordId: string;
   timezone: string;
-  created_on: Date;
+  created_on?: Date;
 }
 
 export type UserPk = "id";
@@ -21,7 +21,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   declare id?: number;
   declare discordId: string;
   declare timezone: string;
-  declare created_on: Date;
+  declare created_on?: Date;
 
   // User hasMany AvailabilityRecurring via user_id
   availability_recurrings!: AvailabilityRecurring[];
