@@ -8,7 +8,7 @@ export interface AvailabilityWindowAttributes {
   start_datetime: Date;
   end_datetime: Date;
   is_available: number;
-  created_on: Date;
+  created_on?: Date;
 }
 
 export type AvailabilityWindowPk = "id";
@@ -22,7 +22,7 @@ export class AvailabilityWindow extends Model<AvailabilityWindowAttributes, Avai
   declare start_datetime: Date;
   declare end_datetime: Date;
   declare is_available: number;
-  declare created_on: Date;
+  declare created_on?: Date;
 
   // AvailabilityWindow belongsTo User via user_id
   user!: User;

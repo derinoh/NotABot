@@ -10,7 +10,7 @@ export interface AvailabilityRecurringAttributes {
   weekday: number;
   start_time: string;
   end_time: string;
-  created_on: Date;
+  created_on?: Date;
 }
 
 export type AvailabilityRecurringPk = "id";
@@ -25,7 +25,7 @@ export class AvailabilityRecurring extends Model<AvailabilityRecurringAttributes
   declare weekday: number;
   declare start_time: string;
   declare end_time: string;
-  declare created_on: Date;
+  declare created_on?: Date;
 
   // AvailabilityRecurring belongsTo Frequency via freq_id
   freq!: Frequency;

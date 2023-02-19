@@ -8,7 +8,7 @@ export interface MatchAttributes {
   game_id: number;
   match_datetime: Date;
   duration_hours?: number;
-  created_on: Date;
+  created_on?: Date;
 }
 
 export type MatchPk = "id";
@@ -21,7 +21,7 @@ export class Match extends Model<MatchAttributes, MatchCreationAttributes> imple
   declare game_id: number;
   declare match_datetime: Date;
   declare duration_hours?: number;
-  declare created_on: Date;
+  declare created_on?: Date;
 
   // Match belongsTo Game via game_id
   game!: Game;

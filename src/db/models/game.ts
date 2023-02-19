@@ -10,7 +10,7 @@ export interface GameAttributes {
   minPlayers: number;
   maxPlayers: number;
   link: string;
-  created_on: Date;
+  created_on?: Date;
 }
 
 export type GamePk = "id";
@@ -25,7 +25,7 @@ export class Game extends Model<GameAttributes, GameCreationAttributes> implemen
   declare minPlayers: number;
   declare maxPlayers: number;
   declare link: string;
-  declare created_on: Date;
+  declare created_on?: Date;
 
   // Game hasMany Match via game_id
   matches!: Match[];
