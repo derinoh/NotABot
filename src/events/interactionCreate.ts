@@ -56,7 +56,7 @@ export const execution: EventExecution = async (
         }
 
         // User is trying to pull a list of their schedules as options list
-        else if (["schedule_id"].includes(focusedOption.name)) {
+        else if (["schedule"].includes(focusedOption.name)) {
             //Get user from db
             const _user = await GetUser(interaction.user.id);
 
@@ -69,10 +69,10 @@ export const execution: EventExecution = async (
                     await _schedules.forEach((schedule, i) => {
                         // Get weekday string
                         const weekday = moment.weekdays()[schedule.weekday + 1];
-                        const user_schedule = `${i}. ${schedule.freq.name}: ${weekday} ${schedule.start_time} — ${schedule.end_time}`;
+                        const user_schedule = `${i + 1}. ${schedule.freq.name}: ${weekday} ${schedule.start_time} — ${schedule.end_time}`;
                         choices.push({
                             name: user_schedule,
-                            value: {i},
+                            value: i,
                         });
                     });
                 else choices.push({ name: "No schedules found", value: 0 });

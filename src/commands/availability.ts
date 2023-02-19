@@ -1,21 +1,12 @@
-import { time } from "console";
 import {
-    CommandInteraction,
-    CommandInteractionOptionResolver,
-    ContextMenuCommandInteraction,
-    inlineCode,
     SlashCommandBuilder,
-    User,
 } from "discord.js";
-import { report } from "process";
-import { AvailabilityRecurring } from "../db/models/availability_recurring";
-import { Command, CommandExecution } from "../interfaces/command";
+import { CommandExecution } from "../interfaces/command";
 import { weekdays, datesOptions } from "../lib/constants";
 import { getErrorMessage } from "../lib/exceptions";
 import { timeRegex } from "../lib/validation";
-import db from "../db/connect";
-import { Op } from "sequelize";
-import { initModels } from "../db/models/init-models";
+import { GetUser, GetRecurringSchedules, InsertRecurringSchedule, DeleteRecurringSchedule } from "../db/controllers";
+import moment from "moment";
 
 export const execution: CommandExecution = async (client, interaction) => {
     const options = interaction.options;
@@ -29,35 +20,58 @@ export const execution: CommandExecution = async (client, interaction) => {
     if (group == "set") {
         if (subcommand == "recurring") {
             try {
-                const { User, AvailabilityRecurring } = initModels(db);
                 const every = <number>options.get("every")?.value;
                 const weekday = <number>options.get("weekday")?.value;
                 const start_time = <string>options.get("start_time")?.value;
                 const end_time = <string>options.get("end_time")?.value;
-                const _user = await User.findOne({
-                    where: { discordId: { [Op.eq]: interaction.user.id } },
-                });
+                const _user = await GetUser(interaction.user.id);
 
                 // TODO: Add the user to the database automatically and prompt them for their timezone
-                if (!_user || _user?.id === undefined) throw new Error('❌ You do not exist as a user in the system yet')
+                if (!_user || _user?.id === undefined) 
+                    throw new Error('❌ You do not exist as a user in the system yet')
 
                 // We need to check that the time string is in the right format because it's the only 
                 // value that the user can actually type whatever they want in there 
                 if (timeRegex.test(start_time) && timeRegex.test(end_time)) {
-                    await AvailabilityRecurring.create({
-                        freq_id: every,
-                        weekday,
-                        start_time,
-                        end_time,
-                        user_id: _user.id,
-                    });
-                    
+                    await InsertRecurringSchedule({freq_id: every, weekday, start_time, end_time, user_id: _user.id});
                     interaction.reply({ content: `✅ Recurring schedule saved!`})
 
                 } else throw new Error("❌ Time is not in the correct format.");
             } catch (err) {
                 console.error(err);
                 await interaction.reply({ content: getErrorMessage(err) });
+            }
+        }
+    }
+    
+    if (group == 'remove') {
+        if (subcommand == 'recurring') {
+            try{
+                const schedule_id = <number>options.get('schedule')?.value;
+                
+                const _user = await GetUser(interaction.user.id);
+                const schedules = await GetRecurringSchedules(_user?.id as number); 
+                // If the user tried to select a schedule that doesn't exist for them. 
+                if (schedules[schedule_id] === undefined) {
+                    throw new Error('❌ No valid schedule selected to remove');
+                }
+                else {
+                    // Get the schedule object
+                    const schedule = schedules[schedule_id];
+                    // Get the id from the database of the actual index that they selected
+                    const id = <number>schedule.id;
+
+                    // Delete the recurring schedule record
+                    // Get weekday string
+                    const weekday = moment.weekdays()[schedule.weekday + 1];
+                    const sched_string = `${schedule.freq.name}: ${weekday} ${schedule.start_time} — ${schedule.end_time}`;
+                    await DeleteRecurringSchedule(id);
+                    await interaction.reply({ content: `✅ Deleted ${sched_string}`})
+                }
+            }
+            catch(err){
+                console.error(err);
+                await interaction.reply({ content: getErrorMessage(err)});
             }
         }
     }
@@ -188,7 +202,7 @@ export const data = new SlashCommandBuilder()
                     .setDescription("Remove a recurring schedule")
                     .addIntegerOption((option) =>
                         option
-                            .setName("schedule_id")
+                            .setName("schedule")
                             .setDescription(
                                 "Select the recurring schedule to remove"
                             )
