@@ -4,31 +4,31 @@ import moment from 'moment-timezone';
 const weekdays: ApplicationCommandOptionChoiceData<number>[] = [
     {
         name: 'Sunday',
-        value: 1,
+        value: 0,
     },
     {
         name: 'Monday',
-        value: 2,
+        value: 1,
     },
     {
         name: 'Tuesday',
-        value: 3,
+        value: 2,
     },
     {
         name: 'Wednesday',
-        value: 4,
+        value: 3,
     },
     {
         name: 'Thursday',
-        value: 5,
+        value: 4,
     },
     {
         name: 'Friday',
-        value: 6,
+        value: 5,
     },
     {
         name: 'Saturday',
-        value: 7,
+        value: 6,
     },
 ];
 
