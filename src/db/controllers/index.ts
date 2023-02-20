@@ -1,9 +1,12 @@
-import { GetUser } from "./users";
-import { GetRecurringSchedules, InsertRecurringSchedule, DeleteRecurringSchedule } from "./schedules";
+import { GetUser, InsertUser, UpsertUser } from "./users";
+import { GetRecurringSchedules, InsertRecurringSchedule, DeleteRecurringSchedule, CreateScheduleWindow } from "./schedules";
 
 export { 
     GetUser, 
     GetRecurringSchedules,
     InsertRecurringSchedule, 
-    DeleteRecurringSchedule
+    DeleteRecurringSchedule,
+    InsertUser,
+    UpsertUser,
+    CreateScheduleWindow
  }
