@@ -1,9 +1,9 @@
-import { BaseInteraction, bold } from "discord.js";
+import { BaseInteraction, bold, inlineCode } from "discord.js";
 import { readdirSync } from "fs";
 import path from "path";
 import { EventExecution } from "../interfaces/event";
 import { CommandExecution } from "../interfaces/command";
-import { GetUser, GetRecurringSchedules } from '../db/controllers';
+import { GetUser, GetRecurringSchedules, InsertUser } from '../db/controllers';
 import moment from "moment-timezone";
 
 const commandDirectory = __dirname + "/../commands";
@@ -68,7 +68,7 @@ export const execution: EventExecution = async (
                     // Build the options array with the users recurring schedule from the db
                     await _schedules.forEach((schedule, i) => {
                         // Get weekday string
-                        const weekday = moment.weekdays()[schedule.weekday + 1];
+                        const weekday = moment.weekdays()[schedule.weekday];
                         const user_schedule = `${i + 1}. ${schedule.freq.name}: ${weekday} ${schedule.start_time} — ${schedule.end_time}`;
                         choices.push({
                             name: user_schedule,
@@ -91,6 +91,13 @@ export const execution: EventExecution = async (
 
         // Respond with the available choices to the user
         await interaction.respond(options);
+    }
+
+    else if (interaction.isStringSelectMenu()) {
+        if (interaction.customId == 'timezone') {
+            await InsertUser({discordId: interaction.user.id, timezone: interaction.values[0]});
+            await interaction.update({content: `✅ Timezone set to ${inlineCode(interaction.values[0])}`, components: []});
+        }
     }
 
     // Implement other interaction types here.
