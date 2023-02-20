@@ -5,8 +5,9 @@ import type { User, UserId } from './user';
 export interface AvailabilityWindowAttributes {
   id?: number;
   user_id: number;
-  start_datetime: Date;
-  end_datetime: Date;
+  date: string;
+  time: string;
+  hours: number;
   is_available: number;
   created_on?: Date;
 }
@@ -19,8 +20,9 @@ export type AvailabilityWindowCreationAttributes = Optional<AvailabilityWindowAt
 export class AvailabilityWindow extends Model<AvailabilityWindowAttributes, AvailabilityWindowCreationAttributes> implements AvailabilityWindowAttributes {
   declare id?: number;
   declare user_id: number;
-  declare start_datetime: Date;
-  declare end_datetime: Date;
+  declare date: string;
+  declare time: string;
+  declare hours: number;
   declare is_available: number;
   declare created_on?: Date;
 
@@ -46,12 +48,16 @@ export class AvailabilityWindow extends Model<AvailabilityWindowAttributes, Avai
         key: 'id'
       }
     },
-    start_datetime: {
-      type: DataTypes.DATE,
+    date: {
+      type: DataTypes.TEXT,
       allowNull: false
     },
-    end_datetime: {
-      type: DataTypes.DATE,
+    time: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    hours: {
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     is_available: {
