@@ -5,7 +5,7 @@ import path from "path";
 import { EventExecution } from "./interfaces/event";
 
 const client = new Client({
-  intents: [],
+  intents: ["Guilds", "GuildMembers"],
 });
 
 client.once("ready", () => {
