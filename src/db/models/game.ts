@@ -12,7 +12,7 @@ export interface GameAttributes {
   link: string;
   image?: string;
   description?: string;
-  created_on: Date;
+  created_on?: Date;
 }
 
 export type GamePk = "id";
@@ -21,15 +21,15 @@ export type GameOptionalAttributes = "id" | "is_async" | "minPlayers" | "maxPlay
 export type GameCreationAttributes = Optional<GameAttributes, GameOptionalAttributes>;
 
 export class Game extends Model<GameAttributes, GameCreationAttributes> implements GameAttributes {
-  id?: number;
-  name!: string;
-  is_async!: number;
-  minPlayers!: number;
-  maxPlayers!: number;
-  link!: string;
-  image?: string;
-  description?: string;
-  created_on!: Date;
+ declare id?: number;
+  declare name: string;
+  declare is_async: number;
+  declare minPlayers: number;
+  declare maxPlayers: number;
+  declare link: string;
+  declare image?: string;
+  declare description?: string;
+  declare created_on?: Date;
 
   // Game hasMany Match via game_id
   matches!: Match[];
