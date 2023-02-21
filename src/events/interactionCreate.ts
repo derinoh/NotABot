@@ -3,7 +3,7 @@ import { readdirSync } from "fs";
 import path from "path";
 import { EventExecution } from "../interfaces/event";
 import { CommandExecution } from "../interfaces/command";
-import { GetUser, GetRecurringSchedules, InsertUser } from '../db/controllers';
+import { GetUser, GetRecurringSchedules, InsertUser, GetScheduleWindows } from '../db/controllers';
 import moment from "moment-timezone";
 
 const commandDirectory = __dirname + "/../commands";
@@ -70,6 +70,29 @@ export const execution: EventExecution = async (
                         // Get weekday string
                         const weekday = moment.weekdays()[schedule.weekday];
                         const user_schedule = `${i + 1}. ${schedule.freq.name}: ${weekday} ${schedule.start_time} — ${schedule.end_time}`;
+                        choices.push({
+                            name: user_schedule,
+                            value: i,
+                        });
+                    });
+                else choices.push({ name: "No schedules found", value: 0 });
+            } else choices.push({ name: "No schedules found", value: 0 });
+        }
+
+        // User is trying to pull a list of their schedule windows as options list
+        else if (["window"].includes(focusedOption.name)) {
+            //Get user from db
+            const _user = await GetUser(interaction.user.id);
+
+            if (_user) {
+                // Get user's recurring schedule from the db
+                const _schedules = await GetScheduleWindows(_user.id as number);
+
+                if (_schedules)
+                    // Build the options array with the users recurring schedule from the db
+                    await _schedules.forEach((schedule, i) => {
+                        const { is_available, date, time, hours } = schedule;
+                        const user_schedule = `${i + 1}. ${is_available ? 'Available' : 'Not Available'} ${date} @ ${time} for ${hours} hours`;
                         choices.push({
                             name: user_schedule,
                             value: i,

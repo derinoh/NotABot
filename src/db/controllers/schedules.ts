@@ -23,13 +23,24 @@ async function InsertRecurringSchedule(entity: AvailabilityRecurringAttributes) 
     return AvailabilityRecurring.create(entity);
 }
 
+/**
+ * Create a window of availability or non-availability
+ * @param entity 
+ */
 async function CreateScheduleWindow(entity: AvailabilityWindowAttributes) {
-    if (entity.is_available) {
-        return AvailabilityWindow.create(entity)
-    }
+    return AvailabilityWindow.create(entity)
     // else we need to update or delete the window of time that they can no longer make if it exists
     // or we need to insert an is_available=false record if there's conflicts with the recurring schedule...
     // we need an engine for this
+}
+
+async function GetScheduleWindows(userId: number) {
+    return AvailabilityWindow.findAll({
+        where: { user_id: { [Op.eq]: userId } },
+        order: [
+            ["id", "ASC"]
+        ]
+    });
 }
 
 /**
@@ -42,4 +53,10 @@ async function DeleteRecurringSchedule(id: number) {
     });
 }
 
-export { GetRecurringSchedules, InsertRecurringSchedule, DeleteRecurringSchedule, CreateScheduleWindow }
+async function DeleteScheduleWindow(id: number) {
+    return AvailabilityWindow.destroy({
+        where: { id: {[Op.eq]: id}}
+    })
+}
+
+export { GetRecurringSchedules, InsertRecurringSchedule, DeleteRecurringSchedule, CreateScheduleWindow, GetScheduleWindows, DeleteScheduleWindow}

@@ -6,7 +6,7 @@ import { CommandExecution } from "../interfaces/command";
 import { weekdays, datesOptions, timezones } from "../lib/constants";
 import { getErrorMessage } from "../lib/exceptions";
 import { timeRegex } from "../lib/validation";
-import { GetUser, GetRecurringSchedules, InsertRecurringSchedule, DeleteRecurringSchedule, UpsertUser, CreateScheduleWindow } from "../db/controllers";
+import { GetUser, GetRecurringSchedules, InsertRecurringSchedule, DeleteRecurringSchedule, UpsertUser, CreateScheduleWindow, GetScheduleWindows, DeleteScheduleWindow } from "../db/controllers";
 import moment from "moment";
 
 export const execution: CommandExecution = async (client, interaction) => {
@@ -45,7 +45,7 @@ export const execution: CommandExecution = async (client, interaction) => {
         }
         if (subcommand == 'window') {
             try {
-                const is_available = <number>options.get("is_available")?.value;
+                const is_available = <number>options.get("available")?.value;
                 const date = <string>options.get("date")?.value;
                 const time = <string>options.get("time")?.value;
                 const hours = <number>options.get("hours")?.value;
@@ -57,6 +57,7 @@ export const execution: CommandExecution = async (client, interaction) => {
                 
                 // TODO: This is not currently doing anything and it's too late on a Sunday for me to care
                 await CreateScheduleWindow({user_id: _user.id as number, is_available, date, time, hours })
+                await interaction.reply({content: `✅ Added new schedule as ${inlineCode(is_available ? 'Available' : 'Not Available')} for ${date} @ ${time} for ${hours} hours`})
             }
             catch (err) {
                 console.error(err);
@@ -78,8 +79,8 @@ export const execution: CommandExecution = async (client, interaction) => {
     }
     
     if (group == 'remove') {
-        if (subcommand == 'recurring') {
-            try{
+        try {
+            if (subcommand == 'recurring') {
                 const schedule_id = <number>options.get('schedule')?.value;
                 
                 const _user = await GetUser(interaction.user.id);
@@ -106,10 +107,36 @@ export const execution: CommandExecution = async (client, interaction) => {
                     await interaction.reply({ content: `✅ Deleted ${sched_string}`, ephemeral: true})
                 }
             }
-            catch(err){
-                console.error(err);
-                await interaction.reply({ content: getErrorMessage(err), ephemeral: true});
+            if (subcommand == 'window') {
+                const schedule_id = <number>options.get('window')?.value;
+                const _user = await GetUser(interaction.user.id);
+                if (!_user || _user?.id === undefined) 
+                    throw new Error(`❌ You do not exist as a user in the system yet.\m\mPlease run the ${inlineCode('/scheduler set timezone')} command.`)
+
+                const schedules = await GetScheduleWindows(_user?.id as number); 
+                // If the user tried to select a schedule that doesn't exist for them. 
+                if (schedules[schedule_id] === undefined) {
+                    throw new Error('❌ No valid schedule selected to remove');
+                }
+                else {
+                    // Get the schedule object
+                    const schedule = schedules[schedule_id];
+                    
+                    // Get the id from the database of the actual index that they selected
+                    const id = <number>schedule.id;
+
+                    // Delete the recurring schedule record
+                    // Get weekday string
+                    const { is_available, date, time, hours } = schedule;
+                    const sched_string = `${is_available ? 'Available' : 'Not Available'} ${date} @ ${time} for ${hours} hours`;
+                    await DeleteScheduleWindow(id);
+                    await interaction.reply({ content: `✅ Deleted ${sched_string}`, ephemeral: true})
+                }
             }
+        }
+        catch(err){
+            console.error(err);
+            await interaction.reply({ content: getErrorMessage(err), ephemeral: true});
         }
     }
 };
@@ -254,6 +281,20 @@ export const data = new SlashCommandBuilder()
                             .setName("schedule")
                             .setDescription(
                                 "Select the recurring schedule to remove"
+                            )
+                            .setRequired(true)
+                            .setAutocomplete(true)
+                    )
+            )
+            .addSubcommand((subcommand) =>
+                subcommand
+                    .setName("window")
+                    .setDescription("Remove a schedule window")
+                    .addIntegerOption((option) =>
+                        option
+                            .setName("window")
+                            .setDescription(
+                                "Select the schedule window to remove"
                             )
                             .setRequired(true)
                             .setAutocomplete(true)
