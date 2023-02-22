@@ -188,7 +188,7 @@ export const data = new SlashCommandBuilder()
                         option
                             .setName("end_time")
                             .setDescription(
-                                "Set availability end time ((ex. 16:00))"
+                                "Set availability end time (ex. 16:00)"
                             )
                             .setRequired(true)
                             .setAutocomplete(true)

@@ -10,6 +10,7 @@ export interface GameAttributes {
   minPlayers: number;
   maxPlayers: number;
   link: string;
+  price?: number;
   image?: string;
   description?: string;
   created_on?: Date;
@@ -27,6 +28,7 @@ export class Game extends Model<GameAttributes, GameCreationAttributes> implemen
   declare minPlayers: number;
   declare maxPlayers: number;
   declare link: string;
+  declare price?: number;
   declare image?: string;
   declare description?: string;
   declare created_on?: Date;
@@ -86,6 +88,10 @@ export class Game extends Model<GameAttributes, GameCreationAttributes> implemen
     link: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: true
     },
     image: {
       type: DataTypes.TEXT,

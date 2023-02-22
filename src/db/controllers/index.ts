@@ -1,6 +1,7 @@
 import { GetUser, InsertUser, UpsertUser } from "./users";
 import { GetRecurringSchedules, InsertRecurringSchedule, DeleteRecurringSchedule, CreateScheduleWindow,
          GetScheduleWindows, DeleteScheduleWindow } from "./schedules";
+import { GetGamesList, InsertGame, DeleteGame } from './games';
 
 export { 
     GetUser, 
@@ -11,5 +12,8 @@ export {
     UpsertUser,
     CreateScheduleWindow,
     GetScheduleWindows,
-    DeleteScheduleWindow
+    DeleteScheduleWindow,
+    GetGamesList,
+    InsertGame,
+    DeleteGame
  }

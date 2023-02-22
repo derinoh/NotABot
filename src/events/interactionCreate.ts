@@ -3,7 +3,7 @@ import { readdirSync } from "fs";
 import path from "path";
 import { EventExecution } from "../interfaces/event";
 import { CommandExecution } from "../interfaces/command";
-import { GetUser, GetRecurringSchedules, InsertUser, GetScheduleWindows } from '../db/controllers';
+import { GetUser, GetRecurringSchedules, InsertUser, GetScheduleWindows, GetGamesList } from '../db/controllers';
 import moment from "moment-timezone";
 
 const commandDirectory = __dirname + "/../commands";
@@ -34,8 +34,11 @@ export const execution: EventExecution = async (
     if (interaction.isChatInputCommand()) {
         if (!commands[interaction.commandName])
             return unimplemented(interaction);
-
-        commands[interaction.commandName](client, interaction);
+    commands[interaction.commandName](client, interaction);
+    if (interaction.isButton()) {
+        
+    }
+        
     } else if (interaction.isAutocomplete()) {
         const focusedOption = interaction.options.getFocused(true);
         const choices = [];
@@ -100,6 +103,17 @@ export const execution: EventExecution = async (
                     });
                 else choices.push({ name: "No schedules found", value: 0 });
             } else choices.push({ name: "No schedules found", value: 0 });
+        }
+        // User is trying to pull list of games
+        else if (['game'].includes(focusedOption.name)) {
+            const games = await GetGamesList();
+            await games.forEach((game, i) => {
+                const { name } = game;
+                choices.push({
+                    name: `${i + 1}. ${name}`,
+                    value: i
+                })
+            });
         }
 
         // Filter out their available options to only show values that
