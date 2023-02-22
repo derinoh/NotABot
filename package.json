@@ -19,7 +19,6 @@
     "dotenv": "^16.0.1",
     "fetch-opengraph": "^1.0.35",
     "moment-timezone": "^0.5.40",
-    "pagination.djs": "^4.0.9",
     "sequelize": "^6.28.0",
     "sqlite": "^4.1.2",
     "sqlite3": "^5.1.4"

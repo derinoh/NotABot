@@ -1011,11 +1011,6 @@ p-map@^4.0.0:
   dependencies:
     aggregate-error "^3.0.0"
 
-pagination.djs@^4.0.9:
-  version "4.0.9"
-  resolved "https://registry.yarnpkg.com/pagination.djs/-/pagination.djs-4.0.9.tgz#a63d6cabfb1c06ba142cb52aeda62560e3d6f7c7"
-  integrity sha512-1WCW1GLRI36ueh/duW3pty4IdWO8eibH2Se3gB4iFYFoPPmpfF+AiOmr8pWKHuqFYs9A4NuGdO1uiJLBItT7/Q==
-
 path-is-absolute@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/path-is-absolute/-/path-is-absolute-1.0.1.tgz"
