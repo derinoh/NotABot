@@ -1,20 +1,15 @@
 import {
-    CommandInteraction,
-    inlineCode,
-    MessageInteraction,
     PermissionFlagsBits,
     SlashCommandBuilder,
-    User,
 } from "discord.js";
 import { CommandExecution } from "../interfaces/command";
 import { getErrorMessage } from "../lib/exceptions";
-import { DeleteGame, GetGamesList, InsertGame } from "../db/controllers";
+import { GetGamesList } from "../db/controllers";
 import {
     pagination,
     ButtonTypes,
     ButtonStyles,
 } from "@devraelfreeze/discordjs-pagination";
-import { Pagination } from 'pagination.djs';
 import { gameEmbed } from "../lib/embeds";
 
 export const execution: CommandExecution = async (client, interaction) => {
@@ -23,10 +18,27 @@ export const execution: CommandExecution = async (client, interaction) => {
     if (subcommand == "catalog") {
         try {
             const games = await GetGamesList();
-            const gamesEmbeds = games.map((game) => gameEmbed(game));
-
-            // If the games list ever gets > 10 then we need to paginate it
-            await interaction.reply({ embeds: gamesEmbeds, ephemeral: true}); 
+            await pagination({
+                embeds: games.map((game) => gameEmbed(game)),
+                author: interaction?.member?.user as any,
+                interaction: interaction as any,
+                ephemeral: true,
+                disableButtons: false, // disable the buttons after a period of time
+                fastSkip: false,
+                pageTravel: false,
+                buttons: [
+                    {
+                        type: ButtonTypes.previous,
+                        label: "Previous Page",
+                        style: ButtonStyles.Primary,
+                    },
+                    {
+                        type: ButtonTypes.next,
+                        label: "Next Page",
+                        style: ButtonStyles.Success,
+                    },
+                ],
+            });
         } catch (err) {
             console.error(err);
             await interaction.reply({

@@ -21,10 +21,10 @@ readdirSync(commandDirectory)
     });
 
 const unimplemented = (interaction: BaseInteraction) => {
-    if (interaction.isRepliable())
-        return interaction.reply({
-            content: bold("🛑 This interaction is not implemented."),
-        });
+    // if (interaction.isRepliable())
+    //     return interaction.reply({
+    //         content: bold("🛑 This interaction is not implemented."),
+    //     });
 };
 
 export const execution: EventExecution = async (
